@@ -159,7 +159,8 @@ const Index = () => {
       const prevStatus = postIt.status;
       const newStatus = done ? ('doing' as const) : ('done' as const);
       const completedAt = done ? null : new Date().toISOString();
-      const completedBy = done ? null : CURRENT_USER_ID;
+      // completed_by no DB é uuid; sem auth usamos null (na UI mantemos CURRENT_USER_ID)
+      const completedByForDb = done ? null : null;
 
       setPostIts((prev) =>
         prev.map((p) =>
@@ -186,7 +187,7 @@ const Index = () => {
         .update({
           status: newStatus,
           completed_at: completedAt,
-          completed_by: completedBy,
+          completed_by: completedByForDb,
         })
         .eq('id', postIt.id);
 
@@ -206,7 +207,7 @@ const Index = () => {
           .update({
             status: 'done',
             completed_at: postIt.completed_at ?? new Date().toISOString(),
-            completed_by: postIt.completed_by ?? CURRENT_USER_ID,
+            completed_by: null,
           })
           .eq('id', postIt.id);
         if (!err) setPostIts(previousList);
