@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232563eb'/%3E%3Crect x='11' y='4' width='2.5' height='2.5' rx='0.5' fill='%231d4ed8'/%3E%3Crect x='18.5' y='4' width='2.5' height='2.5' rx='0.5' fill='%231d4ed8'/%3E%3Crect x='5' y='13' width='4' height='4' rx='0.8' fill='rgba(255,255,255,0.4)'/%3E%3Crect x='5' y='19' width='4' height='4' rx='0.8' fill='rgba(255,255,255,0.4)'/%3E%3Cpath d='M20 22 L23 25 L29 17' stroke='%2310b981' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" type="image/svg+xml" />
+    <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232563eb'/%3E%3Crect x='11' y='4' width='2.5' height='2.5' rx='0.5' fill='%231d4ed8'/%3E%3Crect x='18.5' y='4' width='2.5' height='2.5' rx='0.5' fill='%231d4ed8'/%3E%3Crect x='5' y='13' width='4' height='4' rx='0.8' fill='rgba(255,255,255,0.4)'/%3E%3Crect x='5' y='19' width='4' height='4' rx='0.8' fill='rgba(255,255,255,0.4)'/%3E%3Cpath d='M20 22 L23 25 L29 17' stroke='%2310b981' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlanControl</title>
+    <meta name="description" content="PlanControl - Planejamento e anotações" />
+    <meta property="og:title" content="PlanControl" />
+    <meta property="og:description" content="PlanControl - Planejamento e anotações" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PlanControl" />
+    <meta name="twitter:description" content="PlanControl - Planejamento e anotações" />
+    <script>
+      (function () {
+        var themeKey = 'plancontrol_theme';
+        var motionKey = 'plancontrol_motion';
+        var validThemes = ['whiteboard','blueprint','kanban','focus','neon'];
+        var validMotion = ['off','low','high'];
+        var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        try {
+          var t = localStorage.getItem(themeKey);
+          if (!t || validThemes.indexOf(t) === -1) { t = 'whiteboard'; localStorage.setItem(themeKey, t); }
+          document.documentElement.classList.add('theme-' + t);
+          document.documentElement.setAttribute('data-theme', t);
+          var m = reduced ? 'off' : (localStorage.getItem(motionKey) || 'high');
+          if (validMotion.indexOf(m) === -1) m = 'high';
+          document.documentElement.setAttribute('data-motion', m);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

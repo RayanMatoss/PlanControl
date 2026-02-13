@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 96%;
+    --foreground: 30 15% 15%;
+    --card: 40 25% 99%;
+    --card-foreground: 30 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 15% 15%;
+    --primary: 32 85% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 35 25% 91%;
+    --secondary-foreground: 30 15% 25%;
+    --muted: 35 15% 93%;
+    --muted-foreground: 30 10% 46%;
+    --accent: 32 35% 88%;
+    --accent-foreground: 30 15% 20%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 35 18% 88%;
+    --input: 35 18% 88%;
+    --ring: 32 85% 52%;
+    --radius: 0.75rem;
+
+    --sidebar-background: 40 25% 97%;
+    --sidebar-foreground: 30 15% 25%;
+    --sidebar-primary: 32 85% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 35 25% 92%;
+    --sidebar-accent-foreground: 30 15% 20%;
+    --sidebar-border: 35 18% 90%;
+    --sidebar-ring: 32 85% 52%;
+
+    --postit-yellow: 48 95% 76%;
+    --postit-pink: 340 75% 85%;
+    --postit-blue: 210 65% 84%;
+    --postit-green: 150 45% 80%;
+    --postit-orange: 25 88% 80%;
+
+    --status-idea: 220 15% 60%;
+    --status-doing: 32 85% 52%;
+    --status-done: 152 55% 42%;
+
+    --mural-bg: var(--background);
+    --mural-bg-texture: none;
+    --mural-grid-color: var(--border);
+  }
+
+  .dark {
+    --background: 30 15% 8%;
+    --foreground: 40 20% 92%;
+    --card: 30 12% 12%;
+    --card-foreground: 40 20% 92%;
+    --popover: 30 12% 10%;
+    --popover-foreground: 40 20% 92%;
+    --primary: 32 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 10% 16%;
+    --secondary-foreground: 40 15% 85%;
+    --muted: 30 8% 16%;
+    --muted-foreground: 30 10% 55%;
+    --accent: 30 12% 18%;
+    --accent-foreground: 40 15% 88%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 8% 20%;
+    --input: 30 8% 20%;
+    --ring: 32 85% 55%;
+
+    --sidebar-background: 30 12% 9%;
+    --sidebar-foreground: 40 15% 88%;
+    --sidebar-primary: 32 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 8% 14%;
+    --sidebar-accent-foreground: 40 15% 88%;
+    --sidebar-border: 30 8% 18%;
+    --sidebar-ring: 32 85% 55%;
+
+    --postit-yellow: 48 60% 28%;
+    --postit-pink: 340 45% 30%;
+    --postit-blue: 210 40% 30%;
+    --postit-green: 150 30% 26%;
+    --postit-orange: 25 55% 28%;
+
+    --status-idea: 220 12% 50%;
+    --status-doing: 32 75% 50%;
+    --status-done: 152 45% 38%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .postit-card {
+    position: relative;
+    border-radius: var(--radius-md);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  /* Canto dobrado: aplicado via .postit-style-fold no tema whiteboard em theme-packs.css */
+
+  .day-cell {
+    position: relative;
+    border: var(--border-w) solid hsl(var(--border) / 0.5);
+    border-radius: var(--radius-lg);
+    padding: var(--cell-padding);
+    transition: box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .day-cell:hover {
+    border-color: hsl(var(--accent) / 0.3);
+    box-shadow: var(--shadow-sm);
+    background: hsl(var(--accent) / 0.4);
+  }
+  .day-cell.is-today {
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.25);
+    background: hsl(var(--accent) / 0.06);
+  }
+  .day-cell.is-selected {
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.5), var(--shadow-md);
+    background: hsl(var(--accent) / 0.08);
+  }
+  .day-cell.is-other-month {
+    opacity: 0.4;
+  }
+
+  .mural-area {
+    position: relative;
+    background-color: hsl(var(--mural-bg));
+    background-image: var(--mural-bg-texture);
+  }
+}

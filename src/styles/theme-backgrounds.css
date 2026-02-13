@@ -1,0 +1,241 @@
+/**
+ * PlanControl – Fundos animados por tema
+ * Controlado por html[data-theme="..."] e html[data-motion="off|low|high"]
+ * Respeita prefers-reduced-motion (definir data-motion="off" no script)
+ */
+
+/* -------------------------------------------------------------------------
+   Container base
+   ------------------------------------------------------------------------- */
+.theme-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -10;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.theme-bg::before,
+.theme-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.theme-bg__glow,
+.theme-bg__parallax {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+html[data-theme='blueprint'] .theme-bg__parallax {
+  background: radial-gradient(
+    ellipse 60% 60% at 50% 50%,
+    hsl(200 60% 40% / 0.06) 0%,
+    transparent 65%
+  );
+  opacity: 1;
+}
+
+/* data-motion="off" – desativa todas as animações */
+html[data-motion='off'] .theme-bg::before,
+html[data-motion='off'] .theme-bg::after,
+html[data-motion='off'] .theme-bg__glow {
+  animation: none !important;
+}
+
+/* -------------------------------------------------------------------------
+   Keyframes (apenas transform e opacity para performance)
+   ------------------------------------------------------------------------- */
+@keyframes theme-bg-sheen {
+  0% { transform: translateX(-100%) translateY(-100%) skewX(-12deg); opacity: 0; }
+  15% { opacity: 0.06; }
+  50% { transform: translateX(100%) translateY(100%) skewX(-12deg); opacity: 0.08; }
+  85% { opacity: 0.04; }
+  100% { transform: translateX(200%) translateY(200%) skewX(-12deg); opacity: 0; }
+}
+
+@keyframes theme-bg-scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes theme-bg-breathing {
+  0%, 100% { opacity: 0.04; transform: scale(1); }
+  50% { opacity: 0.08; transform: scale(1.02); }
+}
+
+@keyframes theme-bg-aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes theme-bg-flow {
+  0% { transform: translateX(-20%) translateY(0); }
+  100% { transform: translateX(20%) translateY(-10%); }
+}
+
+@keyframes theme-bg-glow-pulse {
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.1; }
+}
+
+/* -------------------------------------------------------------------------
+   A) Whiteboard Pro – paper grain + grid + sheen (high)
+   ------------------------------------------------------------------------- */
+html[data-theme='whiteboard'] .theme-bg::before {
+  background-image:
+    radial-gradient(circle at 20% 30%, hsl(0 0% 0% / 0.02) 0%, transparent 0.5px),
+    radial-gradient(circle at 80% 70%, hsl(0 0% 0% / 0.02) 0%, transparent 0.5px),
+    linear-gradient(hsl(220 15% 92% / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(220 15% 92% / 0.12) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 24px 24px, 24px 24px;
+  opacity: 0.7;
+}
+
+html[data-theme='whiteboard'] .theme-bg::after {
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    hsl(0 0% 100% / 0.1) 25%,
+    hsl(0 0% 100% / 0.05) 50%,
+    transparent 75%
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+}
+html[data-theme='whiteboard'][data-motion='high'] .theme-bg::after {
+  animation: theme-bg-sheen 12s ease-in-out infinite;
+}
+
+/* -------------------------------------------------------------------------
+   B) Blueprint Grid – grid + scanline (+ parallax via JS em high)
+   ------------------------------------------------------------------------- */
+html[data-theme='blueprint'] .theme-bg::before {
+  background-image:
+    linear-gradient(hsl(200 50% 25% / 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(200 50% 25% / 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.6;
+}
+
+html[data-theme='blueprint'] .theme-bg::after {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    hsl(200 50% 30% / 0.06) 2px,
+    hsl(200 50% 30% / 0.06) 4px
+  );
+  background-size: 100% 4px;
+  opacity: 1;
+}
+html[data-theme='blueprint'][data-motion='low'] .theme-bg::after,
+html[data-theme='blueprint'][data-motion='high'] .theme-bg::after {
+  animation: theme-bg-scanline 8s linear infinite;
+}
+html[data-theme='blueprint'][data-motion='low'] .theme-bg::after {
+  animation-duration: 15s;
+}
+
+/* -------------------------------------------------------------------------
+   C) Kanban Calendar – flow lines (gradientes curvos)
+   ------------------------------------------------------------------------- */
+html[data-theme='kanban'] .theme-bg::before {
+  background-image: radial-gradient(
+      ellipse 80% 40% at 20% 50%,
+      hsl(220 40% 70% / 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 80% 30%,
+      hsl(220 50% 75% / 0.05) 0%,
+      transparent 45%
+    );
+  background-size: 120% 120%;
+  opacity: 1;
+}
+html[data-theme='kanban'][data-motion='low'] .theme-bg::before,
+html[data-theme='kanban'][data-motion='high'] .theme-bg::before {
+  animation: theme-bg-flow 25s ease-in-out infinite;
+}
+html[data-theme='kanban'][data-motion='low'] .theme-bg::before {
+  animation-duration: 40s;
+}
+
+html[data-theme='kanban'] .theme-bg::after {
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    hsl(220 30% 90% / 0.04) 50%,
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  opacity: 1;
+}
+html[data-theme='kanban'][data-motion='high'] .theme-bg::after {
+  animation: theme-bg-flow 30s ease-in-out infinite reverse;
+}
+
+/* -------------------------------------------------------------------------
+   D) Focus Mode – breathing gradient muito discreto (só high)
+   ------------------------------------------------------------------------- */
+html[data-theme='focus'] .theme-bg::before {
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    hsl(40 30% 95% / 0.06) 0%,
+    transparent 70%
+  );
+  opacity: 1;
+}
+html[data-theme='focus'][data-motion='high'] .theme-bg::before {
+  animation: theme-bg-breathing 10s ease-in-out infinite;
+}
+
+html[data-theme='focus'] .theme-bg::after {
+  display: none;
+}
+
+/* -------------------------------------------------------------------------
+   E) Neon Night Ops – aurora + noise; glow com blur (high)
+   ------------------------------------------------------------------------- */
+html[data-theme='neon'] .theme-bg::before {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 20%, hsl(320 100% 60% / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 80% 80%, hsl(260 80% 50% / 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 40% at 50% 50%, hsl(280 70% 55% / 0.05) 0%, transparent 45%);
+  background-size: 200% 200%;
+  opacity: 1;
+}
+html[data-theme='neon'][data-motion='low'] .theme-bg::before,
+html[data-theme='neon'][data-motion='high'] .theme-bg::before {
+  animation: theme-bg-aurora 20s ease infinite;
+}
+html[data-theme='neon'][data-motion='low'] .theme-bg::before {
+  animation-duration: 35s;
+}
+
+html[data-theme='neon'] .theme-bg::after {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  opacity: 1;
+}
+
+html[data-theme='neon'] .theme-bg__glow {
+  background: radial-gradient(
+    ellipse 120% 80% at 50% 50%,
+    hsl(320 100% 60% / 0.06) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+}
+html[data-theme='neon'][data-motion='high'] .theme-bg__glow {
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  animation: theme-bg-glow-pulse 8s ease-in-out infinite;
+}

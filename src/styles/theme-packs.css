@@ -1,0 +1,464 @@
+/**
+ * PlanControl – Theme Packs (fundos estáticos, sem animação)
+ * Controlado por html[data-theme="..."] e html[data-motion="off|low|high"]
+ * Tokens: --bg, --panel, --text, --muted, --border, --accent, --accent2,
+ *         --radius-sm/md/lg, --shadow-sm/md/lg, --border-w, --card-gap, --cell-padding, --font-scale, --outline-focus
+ */
+
+/* ========== Base :root (fallback) ========== */
+:root {
+  --bg: 40 33% 96%;
+  --panel: 40 25% 99%;
+  --text: 30 15% 15%;
+  --muted: 30 10% 46%;
+  --border: 35 18% 88%;
+  --accent: 32 85% 52%;
+  --accent2: 35 25% 91%;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --border-w: 1px;
+  --card-gap: 0.5rem;
+  --cell-padding: 0.5rem;
+  --font-scale: 1;
+  --outline-focus: 2px solid hsl(32 85% 52%);
+}
+
+/* Compatibilidade shadcn */
+:root {
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--panel);
+  --card-foreground: var(--text);
+  --muted: var(--accent2);
+  --muted-foreground: var(--muted);
+  --border: var(--border);
+  --primary: var(--accent);
+  --primary-foreground: 0 0% 100%;
+  --accent: var(--accent2);
+  --accent-foreground: var(--text);
+  --ring: var(--accent);
+  --radius: var(--radius-md);
+  --mural-bg: var(--bg);
+  --mural-bg-texture: none;
+  --mural-grid-color: var(--border);
+}
+
+/* Foco visível */
+:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: 2px;
+}
+
+/* ========== A) Whiteboard Pro ========== */
+[data-theme="whiteboard"] {
+  --bg: 0 0% 99%;
+  --panel: 0 0% 100%;
+  --text: 220 15% 15%;
+  --muted: 220 10% 45%;
+  --border: 220 15% 90%;
+  --accent: 32 85% 52%;
+  --accent2: 220 20% 94%;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  --border-w: 1px;
+  --card-gap: 0.5rem;
+  --cell-padding: 0.5rem;
+  --font-scale: 1;
+  --outline-focus: 2px solid hsl(32 85% 52%);
+  --background: 0 0% 99%;
+  --foreground: 220 15% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 15% 15%;
+  --mural-bg: 0 0% 98%;
+  --mural-bg-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  --mural-grid-color: 220 15% 92%;
+  --day-cell-hover: 48 95% 90%;
+  --postit-yellow: 48 95% 76%;
+  --postit-pink: 340 75% 85%;
+  --postit-blue: 210 65% 84%;
+  --postit-green: 150 45% 80%;
+  --postit-orange: 25 88% 80%;
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 220 15% 20%;
+  --sidebar-border: 220 15% 92%;
+}
+
+[data-theme="whiteboard"] .mural-area {
+  background-color: hsl(var(--mural-bg));
+  background-image: var(--mural-bg-texture);
+  background-size: 100% 100%;
+}
+
+[data-theme="whiteboard"] .mural-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(hsl(var(--mural-grid-color) / 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--mural-grid-color) / 0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+[data-theme="whiteboard"] .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+
+/* Post-it: canto dobrado + fita estática */
+[data-theme="whiteboard"] .postit-card.postit-style-fold::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.07) 50%);
+  border-radius: 0 0 var(--radius-sm) 0;
+  pointer-events: none;
+}
+
+[data-theme="whiteboard"] .postit-card.postit-style-fold::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 6px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+  border-radius: 0 0 2px 2px;
+  pointer-events: none;
+}
+
+/* ========== B) Blueprint Grid ========== */
+[data-theme="blueprint"] {
+  --bg: 220 45% 11%;
+  --panel: 220 40% 14%;
+  --text: 210 25% 98%;
+  --muted: 210 25% 88%;
+  --border: 210 35% 28%;
+  --accent: 200 90% 55%;
+  --accent2: 220 38% 20%;
+  --radius-sm: 0.15rem;
+  --radius-md: 0.2rem;
+  --radius-lg: 0.25rem;
+  --shadow-sm: 0 0 0 1px hsl(200 55% 30%);
+  --shadow-md: 0 0 0 1px hsl(200 50% 35%), inset 0 0 0 1px hsl(200 50% 25% / 0.5);
+  --shadow-lg: 0 0 0 2px hsl(200 60% 40%);
+  --border-w: 1px;
+  --card-gap: 0.5rem;
+  --cell-padding: 0.5rem;
+  --font-scale: 1;
+  --outline-focus: 2px solid hsl(200 90% 55%);
+  --background: 220 45% 11%;
+  --foreground: 210 25% 98%;
+  --card: 220 40% 14%;
+  --card-foreground: 210 25% 98%;
+  --mural-bg: 220 48% 9%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 200 50% 22%;
+  --day-cell-hover: 220 40% 16%;
+  --postit-yellow: 48 55% 28%;
+  --postit-pink: 340 40% 28%;
+  --postit-blue: 210 45% 28%;
+  --postit-green: 150 35% 26%;
+  --postit-orange: 25 55% 28%;
+  --sidebar-background: 220 42% 13%;
+  --sidebar-foreground: 210 25% 98%;
+  --sidebar-border: 210 35% 25%;
+}
+
+[data-theme="blueprint"] .mural-area {
+  background-color: hsl(var(--mural-bg));
+  background-image:
+    linear-gradient(hsl(var(--mural-grid-color) / 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--mural-grid-color) / 0.4) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+[data-theme="blueprint"] .day-cell {
+  border-color: hsl(var(--mural-grid-color) / 0.7);
+  box-shadow: inset 0 0 0 1px hsl(200 50% 25% / 0.3);
+}
+
+[data-theme="blueprint"] .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+  border-color: hsl(var(--accent) / 0.6);
+  box-shadow: 0 0 0 1px hsl(var(--accent) / 0.3), inset 0 0 0 1px hsl(var(--accent) / 0.15);
+}
+
+[data-theme="blueprint"] .postit-card {
+  color: hsl(var(--card-foreground));
+}
+
+[data-theme="blueprint"] .postit-card [class*="text-foreground"] {
+  color: hsl(var(--card-foreground)) !important;
+}
+
+/* ========== C) Kanban Calendar ========== */
+[data-theme="kanban"] {
+  --bg: 220 25% 97%;
+  --panel: 0 0% 100%;
+  --text: 220 20% 18%;
+  --muted: 220 15% 42%;
+  --border: 220 18% 88%;
+  --accent: 220 70% 50%;
+  --accent2: 220 25% 92%;
+  --radius-sm: 0.35rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,0.06);
+  --border-w: 1px;
+  --card-gap: 0.35rem;
+  --cell-padding: 0.35rem;
+  --font-scale: 1;
+  --outline-focus: 2px solid hsl(220 70% 50%);
+  --background: 220 25% 97%;
+  --foreground: 220 20% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 18%;
+  --mural-bg: 220 22% 96%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 220 15% 90%;
+  --day-cell-hover: 220 30% 92%;
+  --status-idea: 220 15% 60%;
+  --status-doing: 220 70% 50%;
+  --status-done: 152 50% 42%;
+  --postit-yellow: 48 95% 76%;
+  --postit-pink: 340 75% 85%;
+  --postit-blue: 210 65% 84%;
+  --postit-green: 150 45% 80%;
+  --postit-orange: 25 88% 80%;
+  --sidebar-background: 220 20% 98%;
+  --sidebar-foreground: 220 20% 18%;
+  --sidebar-border: 220 18% 90%;
+}
+
+[data-theme="kanban"] .mural-area {
+  background-color: hsl(var(--mural-bg));
+}
+
+[data-theme="kanban"] .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+
+[data-theme="kanban"] .postit-card[data-status="idea"] { border-left: 4px solid hsl(var(--status-idea)); }
+[data-theme="kanban"] .postit-card[data-status="doing"] { border-left: 4px solid hsl(var(--status-doing)); }
+[data-theme="kanban"] .postit-card[data-status="done"] { border-left: 4px solid hsl(var(--status-done)); }
+
+/* ========== D) Focus Mode ========== */
+[data-theme="focus"] {
+  --bg: 45 25% 97%;
+  --panel: 0 0% 100%;
+  --text: 30 25% 12%;
+  --muted: 30 15% 40%;
+  --border: 35 15% 90%;
+  --accent: 25 85% 48%;
+  --accent2: 40 25% 92%;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.05);
+  --border-w: 1px;
+  --card-gap: 0.65rem;
+  --cell-padding: 0.65rem;
+  --font-scale: 1.05;
+  --outline-focus: 2px solid hsl(25 85% 48%);
+  --background: 45 25% 97%;
+  --foreground: 30 25% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 30 25% 12%;
+  --mural-bg: 45 25% 97%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 35 15% 91%;
+  --day-cell-hover: 40 30% 94%;
+  --postit-yellow: 48 95% 76%;
+  --postit-pink: 340 75% 85%;
+  --postit-blue: 210 65% 84%;
+  --postit-green: 150 45% 80%;
+  --postit-orange: 25 88% 80%;
+  --sidebar-background: 45 25% 98%;
+  --sidebar-foreground: 30 25% 12%;
+  --sidebar-border: 35 15% 92%;
+}
+
+[data-theme="focus"] .mural-area {
+  background-color: hsl(var(--mural-bg));
+}
+
+[data-theme="focus"] .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+
+[data-theme="focus"] .day-cell[data-count="many"] {
+  background: hsl(var(--accent2) / 0.5);
+}
+
+/* ========== E) Neon Night Ops ========== */
+[data-theme="neon"] {
+  --bg: 260 30% 8%;
+  --panel: 260 25% 11%;
+  --text: 260 12% 96%;
+  --muted: 260 15% 65%;
+  --border: 280 40% 25%;
+  --accent: 320 100% 60%;
+  --accent2: 260 25% 16%;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 0 0 1px hsl(var(--border)), 0 0 12px hsl(320 100% 60% / 0.08);
+  --shadow-md: 0 0 0 1px hsl(var(--border)), 0 0 20px hsl(320 100% 60% / 0.1);
+  --shadow-lg: 0 0 0 1px hsl(var(--border)), 0 0 28px hsl(320 100% 60% / 0.12);
+  --border-w: 1px;
+  --card-gap: 0.5rem;
+  --cell-padding: 0.5rem;
+  --font-scale: 1;
+  --outline-focus: 2px solid hsl(320 100% 60%);
+  --background: 260 30% 8%;
+  --foreground: 260 12% 96%;
+  --card: 260 25% 11%;
+  --card-foreground: 260 12% 96%;
+  --mural-bg: 260 35% 6%;
+  --mural-bg-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  --mural-grid-color: 280 35% 18%;
+  --day-cell-hover: 280 30% 16%;
+  --postit-yellow: 48 50% 26%;
+  --postit-pink: 340 38% 26%;
+  --postit-blue: 250 40% 26%;
+  --postit-green: 150 32% 24%;
+  --postit-orange: 25 50% 26%;
+  --sidebar-background: 260 28% 10%;
+  --sidebar-foreground: 260 12% 96%;
+  --sidebar-border: 280 35% 22%;
+}
+
+[data-theme="neon"] .mural-area {
+  background-color: hsl(var(--mural-bg));
+  background-image: var(--mural-bg-texture);
+  background-size: 100% 100%;
+}
+
+[data-theme="neon"] .day-cell {
+  background: hsl(var(--panel) / 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="neon"] .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+  box-shadow: 0 0 0 1px hsl(var(--accent) / 0.35), 0 0 20px hsl(var(--accent) / 0.08);
+}
+
+[data-theme="neon"] .postit-card {
+  background: hsl(var(--panel) / 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="neon"] .postit-card [class*="text-foreground"] {
+  color: hsl(var(--card-foreground)) !important;
+}
+
+[data-theme="neon"] .postit-card.postit-pulse {
+  animation: neon-pulse 1.2s ease-out;
+}
+
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: var(--shadow-sm); }
+  50% { box-shadow: 0 0 24px hsl(320 100% 60% / 0.25), 0 0 0 1px hsl(var(--border)); }
+}
+
+/* ========== ThemeSwitcher preview (shape + border + shadow por tema) ========== */
+.theme-preview[data-theme="whiteboard"] {
+  --radius-md: 0.5rem;
+  --radius-sm: 0.375rem;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --border-w: 1px;
+}
+.theme-preview[data-theme="blueprint"] {
+  --radius-md: 0.2rem;
+  --radius-sm: 0.15rem;
+  --shadow-sm: 0 0 0 1px hsl(200 55% 30%);
+  --border-w: 1px;
+}
+.theme-preview[data-theme="kanban"] {
+  --radius-md: 0.5rem;
+  --radius-sm: 0.35rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --border-w: 1px;
+}
+.theme-preview[data-theme="focus"] {
+  --radius-md: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --border-w: 1px;
+}
+.theme-preview[data-theme="neon"] {
+  --radius-md: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow-sm: 0 0 0 1px hsl(280 40% 25%), 0 0 12px hsl(320 100% 60% / 0.1);
+  --border-w: 1px;
+}
+.theme-preview {
+  border-radius: var(--radius-md);
+  border-width: var(--border-w);
+  box-shadow: var(--shadow-sm);
+}
+.theme-preview > div {
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ========== ThemeSwitcher: contraste garantido (legível em qualquer tema) ========== */
+.theme-switcher-panel {
+  background: hsl(0 0% 99%) !important;
+  color: hsl(220 18% 14%) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.theme-switcher-panel .theme-switcher-title {
+  color: hsl(220 18% 20%) !important;
+}
+
+.theme-switcher-panel .theme-switcher-desc {
+  color: hsl(220 12% 42%) !important;
+}
+
+.theme-switcher-panel .theme-switcher-name {
+  color: hsl(220 18% 14%) !important;
+}
+
+.theme-switcher-panel .theme-switcher-card {
+  background: hsl(0 0% 100%);
+  border-color: hsl(220 15% 88%);
+  color: hsl(220 18% 14%);
+}
+
+.theme-switcher-panel .theme-switcher-card:hover {
+  background: hsl(220 20% 97%);
+}
+
+.theme-switcher-panel .theme-switcher-motion-btn {
+  background: hsl(0 0% 100%);
+  color: hsl(220 12% 38%);
+}
+
+.theme-switcher-panel .theme-switcher-motion-btn:hover {
+  background: hsl(220 20% 96%);
+}

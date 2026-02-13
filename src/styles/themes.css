@@ -1,0 +1,255 @@
+/**
+ * PlanControl – Sistema de temas (skins) para o Mural/Calendário
+ * Aplicar via class no <html>: theme-whiteboard | theme-blueprint | theme-kanban | theme-focus | theme-neon
+ */
+
+/* -------------------------------------------------------------------------
+   Transição suave entre temas (respeita prefers-reduced-motion)
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    transition:
+      background-color 0.35s ease,
+      color 0.25s ease;
+  }
+  html [class*='theme-'] {
+    transition:
+      background-color 0.35s ease,
+      border-color 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+}
+
+/* =========================================================================
+   A) Whiteboard Pro – Fundo branco, textura leve, post-it com canto dobrado
+   ========================================================================= */
+html.theme-whiteboard {
+  --background: 0 0% 99%;
+  --foreground: 220 15% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 15% 15%;
+  --muted: 220 10% 95%;
+  --muted-foreground: 220 10% 45%;
+  --border: 220 15% 90%;
+  --primary: 32 85% 52%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 220 20% 94%;
+  --accent-foreground: 220 15% 20%;
+  --ring: 32 85% 52%;
+  --radius: 0.5rem;
+
+  --mural-bg: 0 0% 98%;
+  --mural-bg-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  --mural-grid-color: 220 15% 92%;
+  --day-cell-hover: 48 95% 90%;
+  --postit-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --postit-fold: rgba(0,0,0,0.06);
+  --postit-radius: 0.375rem;
+  --font-scale: 1;
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 220 15% 20%;
+  --sidebar-border: 220 15% 92%;
+  --sidebar-accent: 220 20% 94%;
+}
+
+html.theme-whiteboard .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+
+/* =========================================================================
+   B) Blueprint Grid – Azul escuro, grid técnico, alto contraste
+   ========================================================================= */
+html.theme-blueprint {
+  --background: 220 45% 11%;
+  --foreground: 210 25% 98%;
+  --card: 220 40% 14%;
+  --card-foreground: 210 25% 98%;
+  --muted: 220 35% 18%;
+  --muted-foreground: 210 25% 88%;
+  --border: 210 35% 28%;
+  --primary: 200 90% 55%;
+  --primary-foreground: 220 45% 11%;
+  --accent: 220 38% 20%;
+  --accent-foreground: 210 25% 96%;
+  --ring: 200 90% 55%;
+  --radius: 0.25rem;
+
+  --mural-bg: 220 48% 9%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 200 50% 25%;
+  --day-cell-hover: 220 40% 18%;
+  --postit-shadow: 0 0 0 1px hsl(200 60% 35%);
+  --postit-fold: transparent;
+  --postit-radius: 0.2rem;
+  --font-scale: 1;
+  --sidebar-background: 220 42% 13%;
+  --sidebar-foreground: 210 25% 98%;
+  --sidebar-border: 210 35% 25%;
+  --sidebar-accent: 220 38% 20%;
+
+  /* Post-its mais escuros para contraste com texto claro */
+  --postit-yellow: 48 55% 28%;
+  --postit-pink: 340 40% 28%;
+  --postit-blue: 210 45% 28%;
+  --postit-green: 150 35% 26%;
+  --postit-orange: 25 55% 28%;
+}
+
+html.theme-blueprint .day-cell {
+  border-color: hsl(var(--mural-grid-color) / 0.6);
+}
+html.theme-blueprint .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.3);
+}
+html.theme-blueprint .postit-card {
+  color: hsl(var(--card-foreground));
+}
+html.theme-blueprint .postit-card [class*="text-foreground"] {
+  color: hsl(var(--card-foreground)) !important;
+}
+
+/* =========================================================================
+   C) Kanban Calendar – Visual Trello, status muito evidente
+   ========================================================================= */
+html.theme-kanban {
+  --background: 220 25% 97%;
+  --foreground: 220 20% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 18%;
+  --muted: 220 15% 93%;
+  --muted-foreground: 220 15% 42%;
+  --border: 220 18% 88%;
+  --primary: 220 70% 50%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 220 25% 92%;
+  --accent-foreground: 220 20% 22%;
+  --ring: 220 70% 50%;
+  --radius: 0.5rem;
+
+  --mural-bg: 220 22% 96%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 220 15% 90%;
+  --day-cell-hover: 220 30% 92%;
+  --postit-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  --postit-fold: rgba(0,0,0,0.04);
+  --postit-radius: 0.5rem;
+  --font-scale: 1;
+
+  --status-idea: 220 15% 60%;
+  --status-doing: 220 70% 50%;
+  --status-done: 152 50% 42%;
+  --sidebar-background: 220 20% 98%;
+  --sidebar-foreground: 220 20% 18%;
+  --sidebar-border: 220 18% 90%;
+  --sidebar-accent: 220 25% 92%;
+}
+
+html.theme-kanban .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+
+/* =========================================================================
+   D) Focus Mode – Ultra clean, tipografia forte, heatmap leve
+   ========================================================================= */
+html.theme-focus {
+  --background: 40 20% 98%;
+  --foreground: 30 25% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 30 25% 12%;
+  --muted: 40 15% 94%;
+  --muted-foreground: 30 15% 40%;
+  --border: 35 15% 90%;
+  --primary: 25 85% 48%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 40 25% 92%;
+  --accent-foreground: 30 25% 15%;
+  --ring: 25 85% 48%;
+  --radius: 0.75rem;
+
+  --mural-bg: 45 25% 97%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 35 15% 91%;
+  --day-cell-hover: 40 30% 94%;
+  --postit-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  --postit-fold: rgba(0,0,0,0.05);
+  --postit-radius: 0.625rem;
+  --font-scale: 1.05;
+  --sidebar-background: 45 25% 98%;
+  --sidebar-foreground: 30 25% 12%;
+  --sidebar-border: 35 15% 92%;
+  --sidebar-accent: 40 25% 92%;
+}
+
+html.theme-focus body {
+  letter-spacing: 0.01em;
+}
+html.theme-focus .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+}
+/* Heatmap leve: dias com muitos post-its */
+html.theme-focus .day-cell[data-count="many"] {
+  background: hsl(var(--accent) / 0.5);
+}
+
+/* =========================================================================
+   E) Neon Night Ops – Dark com brilho neon, pulse em updates
+   ========================================================================= */
+html.theme-neon {
+  --background: 260 30% 8%;
+  --foreground: 260 12% 96%;
+  --card: 260 25% 11%;
+  --card-foreground: 260 12% 96%;
+  --muted: 260 20% 15%;
+  --muted-foreground: 260 15% 85%;
+  --border: 280 40% 25%;
+  --primary: 320 100% 60%;
+  --primary-foreground: 260 30% 8%;
+  --accent: 260 25% 16%;
+  --accent-foreground: 260 12% 94%;
+  --ring: 320 100% 60%;
+  --radius: 0.5rem;
+
+  --mural-bg: 260 35% 6%;
+  --mural-bg-texture: none;
+  --mural-grid-color: 280 35% 18%;
+  --day-cell-hover: 280 30% 18%;
+  --postit-shadow: 0 0 12px hsl(320 100% 60% / 0.15);
+  --postit-fold: transparent;
+  --postit-radius: 0.5rem;
+  --font-scale: 1;
+  --neon-glow: 320 100% 60%;
+  --sidebar-background: 260 28% 10%;
+  --sidebar-foreground: 260 12% 96%;
+  --sidebar-border: 280 35% 22%;
+  --sidebar-accent: 260 25% 16%;
+
+  /* Post-its mais escuros para contraste com texto claro */
+  --postit-yellow: 48 50% 26%;
+  --postit-pink: 340 38% 26%;
+  --postit-blue: 250 40% 26%;
+  --postit-green: 150 32% 24%;
+  --postit-orange: 25 50% 26%;
+}
+
+html.theme-neon .day-cell:hover {
+  background: hsl(var(--day-cell-hover)) !important;
+  box-shadow: 0 0 0 1px hsl(var(--neon-glow) / 0.3);
+}
+html.theme-neon .postit-card {
+  box-shadow: 0 0 0 1px hsl(var(--border)), var(--postit-shadow);
+}
+html.theme-neon .postit-card {
+  color: hsl(var(--card-foreground));
+}
+html.theme-neon .postit-card [class*="text-foreground"] {
+  color: hsl(var(--card-foreground)) !important;
+}
+html.theme-neon .postit-card.postit-pulse {
+  animation: neon-pulse 1.5s ease-out;
+}
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px hsl(var(--border)), var(--postit-shadow); }
+  50% { box-shadow: 0 0 16px hsl(var(--neon-glow) / 0.4), 0 0 0 1px hsl(var(--border)); }
+}
