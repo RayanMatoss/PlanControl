@@ -9,10 +9,35 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { PostIt, isPostItDone } from '@/types/mural';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 
 type ViewMode = 'year' | 'month';
 
 const CURRENT_USER_ID = 'current-user';
+
+type PostItRow = Database['public']['Tables']['post_its']['Row'];
+
+function rowToPostIt(row: PostItRow): PostIt {
+  return {
+    id: row.id,
+    title: row.title,
+    body: row.body ?? undefined,
+    color: row.color,
+    status: row.status,
+    type: row.type,
+    secretaria: row.secretaria ?? undefined,
+    assigned_to: row.assigned_to ?? undefined,
+    created_by: row.created_by,
+    tags: row.tags ?? [],
+    start_date: row.start_date,
+    end_date: row.end_date ?? undefined,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    completed_at: row.completed_at ?? undefined,
+    completed_by: row.completed_by ?? undefined,
+  };
+}
 
 const Index = () => {
   const { toast } = useToast();
@@ -32,6 +57,28 @@ const Index = () => {
       return true;
     }
   });
+  const [loadingPostIts, setLoadingPostIts] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchPostIts() {
+      const { data, error } = await supabase
+        .from('post_its')
+        .select('*')
+        .order('start_date', { ascending: true });
+      if (cancelled) return;
+      if (error) {
+        console.error('Erro ao carregar post-its:', error);
+        setPostIts([]);
+        setLoadingPostIts(false);
+        return;
+      }
+      setPostIts((data ?? []).map(rowToPostIt));
+      setLoadingPostIts(false);
+    }
+    fetchPostIts();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,10 +113,38 @@ const Index = () => {
     setViewMode('month');
   }, []);
 
-  const handleCreatePostIt = useCallback((newPostIt: PostIt) => {
-    setPostIts((prev) => [...prev, newPostIt]);
-    setIsCreateOpen(false);
-  }, []);
+  const handleCreatePostIt = useCallback(
+    async (newPostIt: PostIt) => {
+      const { data, error } = await supabase
+        .from('post_its')
+        .insert({
+          title: newPostIt.title,
+          body: newPostIt.body ?? null,
+          color: newPostIt.color,
+          status: newPostIt.status,
+          type: newPostIt.type,
+          secretaria: newPostIt.secretaria ?? null,
+          assigned_to: newPostIt.assigned_to ?? null,
+          created_by: newPostIt.created_by,
+          tags: newPostIt.tags ?? [],
+          start_date: newPostIt.start_date,
+          end_date: newPostIt.end_date ?? null,
+        })
+        .select('*')
+        .single();
+      if (error) {
+        toast({
+          title: 'Erro ao salvar',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+      setPostIts((prev) => [...prev, rowToPostIt(data as PostItRow)]);
+      setIsCreateOpen(false);
+    },
+    [toast]
+  );
 
   const handleSelectPostIt = useCallback((postIt: PostIt) => {
     const date = new Date(postIt.start_date + 'T12:00:00');
@@ -78,10 +153,13 @@ const Index = () => {
   }, []);
 
   const handleToggleDone = useCallback(
-    (postIt: PostIt) => {
+    async (postIt: PostIt) => {
       const done = isPostItDone(postIt);
       const previousList = postIts;
       const prevStatus = postIt.status;
+      const newStatus = done ? ('doing' as const) : ('done' as const);
+      const completedAt = done ? null : new Date().toISOString();
+      const completedBy = done ? null : CURRENT_USER_ID;
 
       setPostIts((prev) =>
         prev.map((p) =>
@@ -103,12 +181,62 @@ const Index = () => {
         )
       );
 
+      const { error } = await supabase
+        .from('post_its')
+        .update({
+          status: newStatus,
+          completed_at: completedAt,
+          completed_by: completedBy,
+        })
+        .eq('id', postIt.id);
+
+      if (error) {
+        setPostIts(previousList);
+        toast({
+          title: 'Erro ao atualizar',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const undoReaberto = async () => {
+        const { error: err } = await supabase
+          .from('post_its')
+          .update({
+            status: 'done',
+            completed_at: postIt.completed_at ?? new Date().toISOString(),
+            completed_by: postIt.completed_by ?? CURRENT_USER_ID,
+          })
+          .eq('id', postIt.id);
+        if (!err) setPostIts(previousList);
+      };
+      const undoConcluido = async () => {
+        const { error: err } = await supabase
+          .from('post_its')
+          .update({
+            status: prevStatus,
+            completed_at: null,
+            completed_by: null,
+          })
+          .eq('id', postIt.id);
+        if (!err) {
+          setPostIts((prev) =>
+            prev.map((p) =>
+              p.id !== postIt.id
+                ? p
+                : { ...p, status: prevStatus, completed_at: undefined, completed_by: undefined }
+            )
+          );
+        }
+      };
+
       if (done) {
         toast({
           title: 'Reaberto ↩️',
           description: 'Post-it marcado como pendente.',
           action: (
-            <ToastAction altText="Desfazer" onClick={() => setPostIts(previousList)}>
+            <ToastAction altText="Desfazer" onClick={() => undoReaberto()}>
               Desfazer
             </ToastAction>
           ),
@@ -118,23 +246,7 @@ const Index = () => {
           title: 'Concluído ✅',
           description: 'Post-it marcado como concluído.',
           action: (
-            <ToastAction
-              altText="Desfazer"
-              onClick={() => {
-                setPostIts((prev) =>
-                  prev.map((p) =>
-                    p.id !== postIt.id
-                      ? p
-                      : {
-                          ...p,
-                          status: prevStatus,
-                          completed_at: undefined,
-                          completed_by: undefined,
-                        }
-                  )
-                );
-              }}
-            >
+            <ToastAction altText="Desfazer" onClick={() => undoConcluido()}>
               Desfazer
             </ToastAction>
           ),
